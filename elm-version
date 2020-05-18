@@ -1,0 +1,436 @@
+#!/usr/bin/env sh
+
+set -e
+
+supported_binaries="$(printf "elm\nelm-format")"
+default_elm_home="$HOME/.elm"
+binary_dir="elm-tooling"
+
+### HELPERS
+
+stdout() {
+    printf "%s\n" "$@"
+}
+
+stderr() {
+    printf "%s\n" "$@" >&2
+}
+
+unknown_binary_name_error() {
+    stderr "Unknown binary name: $1"
+    stderr "The following binaries are supported:"
+    stderr "$supported_binaries"
+}
+
+unknown_binary_version_error() {
+    stderr "Unknown version for $1: $2"
+    stderr "The following versions are supported:"
+    stderr "$3"
+}
+
+case "$(uname)" in
+    "Linux")
+        os="linux"
+        ;;
+    "Darwin")
+        os="mac"
+        ;;
+    *)
+        stderr "Sorry, your operating system ($(uname)) is not supported yet :("
+        exit 1
+        ;;
+esac
+
+get_latest_version() {
+    case "$1" in
+        "elm")
+            stdout "0.19.1"
+            ;;
+        "elm-format")
+            stdout "0.8.3"
+            ;;
+        *)
+            unknown_binary_name_error "$1"
+            exit 1
+    esac
+}
+
+get_download_info() {
+    case "$1" in
+        "elm")
+            case "$2" in
+                "0.19.0")
+                    case "$os" in
+                        "linux")
+                            stdout "d359adbee89823c641cda326938708d7227dc79aa1f162e0d8fe275f182f528a	https://github.com/elm/compiler/releases/download/0.19.0/binary-for-linux-64-bit.gz"
+                            ;;
+                        "mac")
+                            stdout "f1fa4dd9021e94c5a58b2be8843e3329095232ee3bd21a23524721a40eaabd35	https://github.com/elm/compiler/releases/download/0.19.0/binary-for-mac-64-bit.gz"
+                            ;;
+                    esac
+                    ;;
+                "0.19.1")
+                    case "$os" in
+                        "linux")
+                            stdout "e44af52bb27f725a973478e589d990a6428e115fe1bb14f03833134d6c0f155c	https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz"
+                            ;;
+                        "mac")
+                            stdout "05289f0e3d4f30033487c05e689964c3bb17c0c48012510dbef1df43868545d1	https://github.com/elm/compiler/releases/download/0.19.1/binary-for-mac-64-bit.gz"
+                            ;;
+                    esac
+                    ;;
+                *)
+                    unknown_binary_version_error "$1" "$2" "$(printf "0.19.0\n0.19.1")"
+                    exit 1
+                    ;;
+            esac
+            ;;
+        "elm-format")
+            case "$2" in
+                "0.8.1")
+                    case "$os" in
+                        "linux")
+                            stdout "13d06e0c3f3a9ef585c828ac5761ead148ea2f203573309306393e2d8066e1fd	https://github.com/avh4/elm-format/releases/download/0.8.1/elm-format-0.8.1-linux-x64.tgz"
+                            ;;
+                        "mac")
+                            stdout "e1beba5d3090968cbbd879384617506f4c71a3ea3b01ce94d298e4893e82a640	https://github.com/avh4/elm-format/releases/download/0.8.1/elm-format-0.8.1-mac-x64.tgz"
+                            ;;
+                    esac
+                    ;;
+                "0.8.2")
+                    case "$os" in
+                        "linux")
+                            stdout "a69a4d3c49ccb0dffb3067b35464dc492563274e5778c40625220f9f6b3fd06d	https://github.com/avh4/elm-format/releases/download/0.8.2/elm-format-0.8.2-linux-x64.tgz"
+                            ;;
+                        "mac")
+                            stdout "1f6cc8663922e546645c0536fc9bf7a49351d0b2963d26fc8fcb43e5bc92d733	https://github.com/avh4/elm-format/releases/download/0.8.2/elm-format-0.8.2-mac-x64.tgz"
+                            ;;
+                    esac
+                    ;;
+                "0.8.3")
+                    case "$os" in
+                        "linux")
+                            stdout "9012f3a372488d4a118dc5f8ff57cc61cd1753d7d878b393fa7f60d496e37084	https://github.com/avh4/elm-format/releases/download/0.8.3/elm-format-0.8.3-linux-x64.tgz"
+                            ;;
+                        "mac")
+                            stdout "66c9d4c2fcc7e435726f25ca44509cdf2caff5000dd215b5a086db514576efc7	https://github.com/avh4/elm-format/releases/download/0.8.3/elm-format-0.8.3-mac-x64.tgz"
+                            ;;
+                    esac
+                    ;;
+                *)
+                    unknown_binary_version_error "$1" "$2" "$(printf "0.8.1\n0.8.2\n0.8.3")"
+                    exit 1
+                    ;;
+            esac
+            ;;
+        *)
+            unknown_binary_name_error "$1"
+            exit 1
+    esac
+}
+
+get_closest_elm_tooling_json() {
+    dir="$(pwd)"
+    while test "$dir" != "/"; do
+        file="$dir/elm-tooling.json"
+        if test -f "$file"; then
+            stdout "$file"
+            break
+        fi
+        dir="$(dirname "$dir")"
+    done
+}
+
+download_file() {
+    if type curl > /dev/null; then
+        curl -#fLo "$2" "$1"
+    elif type wget > /dev/null; then
+        wget -nv -O "$2" "$1"
+    else
+        stderr "curl or wget is required, but none of them was found."
+        exit 1
+    fi
+}
+
+download_binary() {
+    name="$1"
+    version="$2"
+    
+    stdout "Downloading $name $version"
+
+    dir="${ELM_HOME:-$default_elm_home}/$binary_dir/$name/$version"
+    binary="$dir/$name"
+
+    info="$(get_download_info "$name" "$version")"
+    hash="$(stdout "$info" | cut -f 1)"
+    url="$(stdout "$info" | cut -f 2)"
+    ext="${url##*.}"
+    tmp="$binary.$ext"
+
+    if test -f "$binary"; then
+        stdout "Already exists: $binary"
+        return 0
+    fi
+
+    stdout "$url"
+    mkdir -p "$dir"
+    download_file "$url" "$tmp"
+
+    # Double space between hash and filename is important on Alpine.
+    if ! stdout "$hash  $tmp" | sha256sum -c; then
+        stderr "Downloaded file is compromised! Aborting."
+        rm "$tmp"
+        exit 1
+    fi
+
+    case "$ext" in
+        "gz")
+            gunzip "$tmp"
+            chmod +x "$binary"
+            ;;
+        "tgz")
+            tar xf "$tmp" -C "$dir" "$name"
+            rm "$tmp"
+            ;;
+        *)
+            stderr "Unknown file extension: $ext"
+            exit 1
+            ;;
+    esac
+}
+
+### COMMANDS
+
+help() {
+    if test "$1" = "more"; then
+        stdout "elm-version setup DIR"
+        stdout "  Creates wrappers for all supported binaries in DIR. DIR should be in \$PATH."
+        stdout "  This command is typically run as part of the installation of elm-version."
+        stdout "  The following wrappers are created:"
+        for name in $supported_binaries; do
+            stdout "    $name ... -> elm-version run $name ..."
+        done
+        stdout ""
+        stdout "elm-version run NAME ..."
+        stdout "  Runs the version of the binary NAME specified in elm-tooling.json."
+        stdout "  Runs the latest version if no elm-tooling.json is found."
+        stdout ""
+        stdout "elm-version uninstall"
+        stdout "  Prints instructions on how to uninstall elm-version and related files."
+    else
+        stdout "Download and run Elm tooling from elm-tooling.json."
+        stdout ""
+        stdout "elm-version download"
+        stdout "  Downloads the binaries specified in the closest elm-tooling.json."
+        stdout "  Downloads the latest versions if no elm-tooling.json is found."
+        stdout ""
+        stdout "elm-version example"
+        stdout "  Prints an example elm-tooling.json to help you get started."
+        stdout ""
+        stdout "elm-version help"
+        stdout "  Prints this message."
+        stdout ""
+        stdout "elm-version help more"
+        stdout "  Prints help about commands not used very often."
+        stdout ""
+        for name in $supported_binaries; do
+            stdout "$name ..."
+        done
+        stdout "  Runs the version of a binary specified in elm-tooling.json."
+        stdout "  Runs the latest version if no elm-tooling.json is found."
+        stdout "  For more information: elm-version help more"
+    fi
+}
+
+example() {
+    if test "$#" -ne 0; then
+        stderr "No extra arguments are supported."
+        stderr "Usage: elm-version example"
+        exit 1
+    fi
+    if test -t 1; then
+        stdout "Here is an example elm-tooling.json, with the latest known binaries:"
+        stdout ""
+    fi
+    stdout "{"
+    stdout '    "entrypoints": ["src/Main.elm"],'
+    stdout '    "binaries": {'
+    last_binary="$(stdout "$supported_binaries" | tail -n 1)"
+    for name in $supported_binaries; do
+        comma="$(test "$name" = "$last_binary" && printf "" || printf ",")"
+        stdout '        "'"$name"'": "'"$(get_latest_version "$name")"'"'"$comma"
+    done
+    stdout "    }"
+    stdout "}"
+    if test -t 1; then
+        stdout ""
+        stdout "To create a new project:"
+        stdout ""
+        stdout "  1. mkdir my-project"
+        stdout "  2. cd my-project"
+        stdout "  3. elm-version example > elm-tooling.json"
+        stdout "  4. elm-version download"
+        stdout "  5. elm init"
+        stdout "  6. mkdir src"
+        stdout "  7. touch src/Main.elm"
+        stdout "  8. Start working on your project!"
+        stdout ""
+        stdout "To add elm-tooling.json to an existing project:"
+        stdout ""
+        stdout "  1. cd my-project"
+        stdout "  2. elm-version example > elm-tooling.json"
+        stdout "  3. Edit elm-tooling.json"
+        stdout "     For example, if you previously installed elm and elm-format using npm,"
+        stdout "     copy their versions from package.json to elm-tooling.json. Then you can"
+        stdout "     remove them from package.json."
+        stdout '     You also need to edit "entrypoints" in elm-tooling.json to match your project.'
+        stdout "  4. elm-version download"
+        stdout "  5. Configure tools and editors"
+        stdout "     For example, tools should look for just 'elm', not './node_modules/.bin/elm'."
+        stdout "  6. Configure CI and build"
+        stdout "     For example, you need to add the elm-version install script and run"
+        stdout "     'elm-version download' rather than 'npm install'. More information:"
+        stdout "     https://github.com/lydell/elm-version"
+    fi
+}
+
+setup() {
+    if test "$#" -ne 1; then
+        stderr "You must specify a single installation directory. Got $# arguments."
+        stderr "Example: elm-version setup /usr/local/bin"
+        exit 1
+    fi
+    dir="$1"
+    if test ! -d "$dir"; then
+        stderr "Directory does not exist: $dir"
+        exit 1
+    fi
+    for name in $supported_binaries; do
+        file="$dir/$name"
+        stdout "Creating $file"
+        printf '#!/usr/bin/env sh\nelm-version run "%s" "$@"' "$name" > "$file"
+        chmod +x "$file"
+    done
+}
+
+download() {
+    if test "$#" -ne 0; then
+        stderr "No extra arguments are supported."
+        stderr "Usage: elm-version download"
+        exit 1
+    fi
+
+    elm_tooling_json="$(get_closest_elm_tooling_json)"
+    if test "$elm_tooling_json" = ""; then
+        stdout "No elm-tooling.json found. Downloading the latest versions."
+        stdout ""
+        for name in $supported_binaries; do
+            download_binary "$name" "$(get_latest_version "$name")"
+            stdout ""
+        done
+    else
+        # Lame JSON “parser.”
+        binaries="$(tr -d "\n" < "$elm_tooling_json" | grep -o '"binaries":\s*{[^{}]*}' | grep -o '"[^"]*":\s*"[^"]*"')"
+        if test "$binaries" = ""; then
+            stdout "No binaries specified in: $elm_tooling_json"
+        else
+            stdout "$binaries" | while read -r line; do
+                name="$(stdout "$line" | cut -d '"' -f 2)"
+                version="$(stdout "$line" | cut -d '"' -f 4)"
+                download_binary "$name" "$version"
+                stdout ""
+            done
+        fi
+    fi
+}
+
+run() {
+    if test "$#" -lt 1; then
+        stderr "You must specify the name of the binary to run."
+        stderr "Example: elm-version run elm"
+        exit 1
+    fi
+
+    name="$1"
+    shift
+
+    latest_version="$(get_latest_version "$name")"
+    elm_tooling_json="$(get_closest_elm_tooling_json)"
+    if test "$elm_tooling_json" = ""; then
+        stderr "No elm-tooling.json found. Using the latest $name version: $latest_version"
+        version="$latest_version"
+    else
+        # Lame JSON “parser.”
+        version="$(grep -o '"'"$name"'":\s*"[^"]*"' "$elm_tooling_json" | cut -d '"' -f 4)"
+        if test "$version" = ""; then
+            stdout "No $name version found in: $elm_tooling_json"
+            stdout "Using the latest $name version: $latest_version"
+            version="$latest_version"
+        fi
+        # Validate version:
+        get_download_info "$name" "$version" > /dev/null
+    fi
+
+    binary="${ELM_HOME:-$default_elm_home}/$binary_dir/$name/$version/$name"
+
+    if test ! -f "$binary"; then
+        stderr "Missing binary: $binary"
+        stderr "To download it: elm-version download"
+        exit 1
+    fi
+
+    "$binary" "$@"
+}
+
+uninstall() {
+    if test "$#" -ne 0; then
+        stderr "No extra arguments are supported."
+        stderr "Usage: elm-version uninstall"
+        exit 1
+    fi
+
+    stdout "To uninstall, you need to remove the following:"
+    stdout "(All of them might not exist.)"
+    stdout ""
+    stdout "$0"
+    for name in $supported_binaries; do
+        stdout "$(dirname "$0")/$name"
+    done
+    stdout "$default_elm_home/$binary_dir/"
+    dir="${ELM_HOME:-$default_elm_home}"
+    if test "$dir" != "$default_elm_home"; then
+        stdout "$dir/$binary_dir/"
+    fi
+    stdout "\$ELM_HOME/$binary_dir/ (for past values of ELM_HOME you might have used)"
+}
+
+### RUN
+
+command="$1"
+test "$#" -ne 0 && shift
+
+case "$command" in
+    ""|"-h"|"-help"|"--help"|"help")
+        help "$@"
+        ;;
+    "example")
+        example "$@"
+        ;;
+    "setup")
+        setup "$@"
+        ;;
+    "download")
+        download "$@"
+        ;;
+    "run")
+        run "$@"
+        ;;
+    "uninstall")
+        uninstall "$@"
+        ;;
+    *)
+        stderr "Unknown command: $command"
+        stderr "To get help: elm-version help"
+        exit 1
+        ;;
+esac
