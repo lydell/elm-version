@@ -78,8 +78,10 @@ sh -c 'cp "$(which elm-version)" elm-version'
 
 ```Dockerfile
 COPY elm-version elm-tooling.json ./
-RUN sh elm-version setup /usr/local/bin && sh elm-version download
+RUN elm-version setup /usr/local/bin && elm-version download
 ```
+
+Note: `curl` or `wget` is required – you might need to install one of them depending on what docker image you use.
 
 ### GitHub Actions
 
@@ -97,7 +99,7 @@ jobs:
       - name: Run workflow
         run: |
           sudo sh elm-version setup /usr/local/bin
-          sh elm-version download
+          elm-version download
           elm make src/Main.elm # Or whatever you do in your build
 ```
 

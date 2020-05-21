@@ -1,0 +1,32 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache elm packages and binaries
+        uses: actions/cache@v1
+        with:
+          path: ~/.elm
+          key: elm-${{ hashFiles('elm*.json') }}
+
+      - name: Run workflow
+        run: |
+          shellcheck elm-version
+          sudo sh elm-version setup /usr/local/bin
+          elm-version download
+          env ELM_HOME=/tmp elm-version download
+          elm --help
+          elm-format --help
+          docker-compose build
+        env:
+          CI: true

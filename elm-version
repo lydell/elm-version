@@ -133,13 +133,16 @@ get_download_info() {
 
 get_closest_elm_tooling_json() {
     dir="$(pwd)"
-    while test "$dir" != "/"; do
+    while true; do
         file="$dir/elm-tooling.json"
         if test -f "$file"; then
             stdout "$file"
             break
         fi
         dir="$(dirname "$dir")"
+        if test "$dir" = "/"; then
+            break
+        fi
     done
 }
 
@@ -307,6 +310,12 @@ setup() {
     if test ! -d "$dir"; then
         stderr "Directory does not exist: $dir"
         exit 1
+    fi
+    elm_version="$dir/elm-version"
+    if ! test -f "$elm_version"; then
+        stdout "Creating $elm_version"
+        cp "$0" "$elm_version"
+        chmod +x "$elm_version"
     fi
     for name in $supported_binaries; do
         file="$dir/$name"

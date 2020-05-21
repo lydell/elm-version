@@ -1,0 +1,7 @@
+FROM alpine
+COPY elm-version elm-tooling.json ./
+RUN sh elm-version setup /usr/local/bin && elm-version download
+RUN ls -lahR ~/.elm/elm-tooling
+RUN elm --version
+# elm-format doesn’t work on alpine.
+# RUN elm-format --version

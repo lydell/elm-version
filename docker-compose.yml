@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  alpine:
+    build:
+      context: .
+      dockerfile: Dockerfile.alpine
+  debian:
+    build:
+      context: .
+      dockerfile: Dockerfile.debian
