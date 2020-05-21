@@ -250,7 +250,7 @@ describe("example", () => {
         4. elm-version download
         5. Configure tools and editors
            For example, tools should look for just 'elm', not './node_modules/.bin/elm'.
-        6. cp \\"$0\\" elm-version
+        6. cp \\"/usr/local/bin/elm-version\\" elm-version
         7. Configure CI and build
            For example, you need to run 'sh elm-version setup && sh elm-version download'
            rather than 'npm install'. More information: https://github.com/lydell/elm-version
