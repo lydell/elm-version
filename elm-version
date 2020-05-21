@@ -240,45 +240,33 @@ download_binary() {
 ### COMMANDS
 
 help() {
-    if test "$1" = "more"; then
-        stdout "elm-version setup DIR"
-        stdout "  Creates wrappers for all supported binaries in DIR. DIR should be in \$PATH."
-        stdout "  This command is typically run as part of the installation of elm-version."
-        stdout "  The following wrappers are created:"
-        for name in $supported_binaries; do
-            stdout "    $name ... -> elm-version run $name ..."
-        done
-        stdout ""
-        stdout "elm-version run NAME ..."
-        stdout "  Runs the version of the binary NAME specified in elm-tooling.json."
-        stdout "  Runs the latest version if no elm-tooling.json is found."
-        stdout ""
-        stdout "elm-version uninstall"
-        stdout "  Prints instructions on how to uninstall elm-version and related files."
-    else
-        stdout "Download and run Elm tooling from elm-tooling.json."
-        stdout ""
-        stdout "elm-version download"
-        stdout "  Downloads the binaries specified in the closest elm-tooling.json."
-        stdout "  Downloads the latest versions if no elm-tooling.json is found."
-        stdout ""
-        stdout "elm-version init"
-        stdout "  Creates an elm-tooling.json with the latest versions,"
-        stdout "  that matches the elm.json created by running 'elm init'."
-        stdout ""
-        stdout "elm-version help"
-        stdout "  Prints this message."
-        stdout ""
-        stdout "elm-version help more"
-        stdout "  Prints help about commands not used very often."
-        stdout ""
-        for name in $supported_binaries; do
-            stdout "$name ..."
-        done
-        stdout "  Runs the version of a binary specified in elm-tooling.json."
-        stdout "  Runs the latest version if no elm-tooling.json is found."
-        stdout "  For more information: elm-version help more"
-    fi
+    stdout "Download and run Elm tooling from elm-tooling.json."
+    stdout ""
+    stdout "elm-version download"
+    stdout "  Downloads the binaries specified in the closest elm-tooling.json."
+    stdout "  Downloads the latest versions if no elm-tooling.json is found."
+    stdout ""
+    stdout "elm-version init"
+    stdout "  Creates an elm-tooling.json with the latest versions,"
+    stdout "  that matches the elm.json created by running 'elm init'."
+    stdout ""
+    stdout "elm-version run NAME ..."
+    stdout "  Runs the binary NAME with the version specified in elm-tooling.json."
+    stdout "  Runs the latest version if no elm-tooling.json is found."
+    stdout ""
+    stdout "elm-version setup DIR"
+    stdout "  Creates wrappers for all supported binaries in DIR. DIR should be in \$PATH."
+    stdout "  This command is typically run as part of the installation of elm-version."
+    stdout "  The following wrappers are created:"
+    for name in $supported_binaries; do
+        stdout "    $name ... -> elm-version run $name ..."
+    done
+    stdout ""
+    stdout "elm-version uninstall"
+    stdout "  Prints instructions on how to uninstall elm-version and related files."
+    stdout ""
+    stdout "elm-version help"
+    stdout "  Prints this message."
 }
 
 init() {

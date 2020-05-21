@@ -46,17 +46,22 @@ describe("help", () => {
         Creates an elm-tooling.json with the latest versions,
         that matches the elm.json created by running 'elm init'.
 
+      elm-version run NAME ...
+        Runs the binary NAME with the version specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+
+      elm-version setup DIR
+        Creates wrappers for all supported binaries in DIR. DIR should be in $PATH.
+        This command is typically run as part of the installation of elm-version.
+        The following wrappers are created:
+          elm ... -> elm-version run elm ...
+          elm-format ... -> elm-version run elm-format ...
+
+      elm-version uninstall
+        Prints instructions on how to uninstall elm-version and related files.
+
       elm-version help
         Prints this message.
-
-      elm-version help more
-        Prints help about commands not used very often.
-
-      elm ...
-      elm-format ...
-        Runs the version of a binary specified in elm-tooling.json.
-        Runs the latest version if no elm-tooling.json is found.
-        For more information: elm-version help more
       ",
       }
     `);
@@ -77,17 +82,22 @@ describe("help", () => {
         Creates an elm-tooling.json with the latest versions,
         that matches the elm.json created by running 'elm init'.
 
+      elm-version run NAME ...
+        Runs the binary NAME with the version specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+
+      elm-version setup DIR
+        Creates wrappers for all supported binaries in DIR. DIR should be in $PATH.
+        This command is typically run as part of the installation of elm-version.
+        The following wrappers are created:
+          elm ... -> elm-version run elm ...
+          elm-format ... -> elm-version run elm-format ...
+
+      elm-version uninstall
+        Prints instructions on how to uninstall elm-version and related files.
+
       elm-version help
         Prints this message.
-
-      elm-version help more
-        Prints help about commands not used very often.
-
-      elm ...
-      elm-format ...
-        Runs the version of a binary specified in elm-tooling.json.
-        Runs the latest version if no elm-tooling.json is found.
-        For more information: elm-version help more
       ",
       }
     `);
@@ -108,17 +118,22 @@ describe("help", () => {
         Creates an elm-tooling.json with the latest versions,
         that matches the elm.json created by running 'elm init'.
 
+      elm-version run NAME ...
+        Runs the binary NAME with the version specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+
+      elm-version setup DIR
+        Creates wrappers for all supported binaries in DIR. DIR should be in $PATH.
+        This command is typically run as part of the installation of elm-version.
+        The following wrappers are created:
+          elm ... -> elm-version run elm ...
+          elm-format ... -> elm-version run elm-format ...
+
+      elm-version uninstall
+        Prints instructions on how to uninstall elm-version and related files.
+
       elm-version help
         Prints this message.
-
-      elm-version help more
-        Prints help about commands not used very often.
-
-      elm ...
-      elm-format ...
-        Runs the version of a binary specified in elm-tooling.json.
-        Runs the latest version if no elm-tooling.json is found.
-        For more information: elm-version help more
       ",
       }
     `);
@@ -139,17 +154,22 @@ describe("help", () => {
         Creates an elm-tooling.json with the latest versions,
         that matches the elm.json created by running 'elm init'.
 
+      elm-version run NAME ...
+        Runs the binary NAME with the version specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+
+      elm-version setup DIR
+        Creates wrappers for all supported binaries in DIR. DIR should be in $PATH.
+        This command is typically run as part of the installation of elm-version.
+        The following wrappers are created:
+          elm ... -> elm-version run elm ...
+          elm-format ... -> elm-version run elm-format ...
+
+      elm-version uninstall
+        Prints instructions on how to uninstall elm-version and related files.
+
       elm-version help
         Prints this message.
-
-      elm-version help more
-        Prints help about commands not used very often.
-
-      elm ...
-      elm-format ...
-        Runs the version of a binary specified in elm-tooling.json.
-        Runs the latest version if no elm-tooling.json is found.
-        For more information: elm-version help more
       ",
       }
     `);
@@ -170,40 +190,22 @@ describe("help", () => {
         Creates an elm-tooling.json with the latest versions,
         that matches the elm.json created by running 'elm init'.
 
-      elm-version help
-        Prints this message.
-
-      elm-version help more
-        Prints help about commands not used very often.
-
-      elm ...
-      elm-format ...
-        Runs the version of a binary specified in elm-tooling.json.
+      elm-version run NAME ...
+        Runs the binary NAME with the version specified in elm-tooling.json.
         Runs the latest version if no elm-tooling.json is found.
-        For more information: elm-version help more
-      ",
-      }
-    `);
-  });
 
-  test("help more", () => {
-    expect(run("help", "more")).toMatchInlineSnapshot(`
-      Object {
-        "status": 0,
-        "stderr": "",
-        "stdout": "elm-version setup DIR
+      elm-version setup DIR
         Creates wrappers for all supported binaries in DIR. DIR should be in $PATH.
         This command is typically run as part of the installation of elm-version.
         The following wrappers are created:
           elm ... -> elm-version run elm ...
           elm-format ... -> elm-version run elm-format ...
 
-      elm-version run NAME ...
-        Runs the version of the binary NAME specified in elm-tooling.json.
-        Runs the latest version if no elm-tooling.json is found.
-
       elm-version uninstall
         Prints instructions on how to uninstall elm-version and related files.
+
+      elm-version help
+        Prints this message.
       ",
       }
     `);
