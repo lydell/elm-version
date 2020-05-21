@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# Copied from: https://github.com/lydell/elm-version
 
 set -e
 
@@ -289,10 +290,10 @@ example() {
         stdout "  4. elm-version download"
         stdout "  5. Configure tools and editors"
         stdout "     For example, tools should look for just 'elm', not './node_modules/.bin/elm'."
-        stdout "  6. Configure CI and build"
-        stdout "     For example, you need to add the elm-version install script and run"
-        stdout "     'elm-version download' rather than 'npm install'. More information:"
-        stdout "     https://github.com/lydell/elm-version"
+        stdout "  6. cp \"\$0\" elm-version"
+        stdout "  7. Configure CI and build"
+        stdout "     For example, you need to run 'sh elm-version setup && sh elm-version download'"
+        stdout "     rather than 'npm install'. More information: https://github.com/lydell/elm-version"
     fi
 }
 
