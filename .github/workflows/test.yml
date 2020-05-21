@@ -1,4 +1,4 @@
-name: CI
+name: Test
 
 on: [push, pull_request]
 
@@ -13,20 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache elm packages and binaries
-        uses: actions/cache@v1
-        with:
-          path: ~/.elm
-          key: elm-${{ hashFiles('elm*.json') }}
-
       - name: Run workflow
         run: |
-          shellcheck elm-version
           sudo sh elm-version setup /usr/local/bin
           elm-version download
+          elm make elm/Main.elm --output elm.js
+          elm-format --verify elm/Main.elm
+
+          rm elm-tooling.json
+          elm-version download
           env ELM_HOME=/tmp elm-version download
-          elm --help
-          elm-format --help
-          docker-compose build
-        env:
-          CI: true
+
+          sh test-all-downloads.sh
