@@ -78,7 +78,7 @@ sh -c 'cp "$(which elm-version)" elm-version'
 
 ```Dockerfile
 COPY elm-version elm-tooling.json ./
-RUN elm-version setup /usr/local/bin && elm-version download
+RUN sh elm-version setup /usr/local/bin && elm-version download
 ```
 
 Note: `curl` or `wget` is required – you might need to install one of them depending on what docker image you use.
