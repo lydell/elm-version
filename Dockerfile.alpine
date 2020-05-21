@@ -1,8 +1,12 @@
 FROM alpine
+
 WORKDIR /app
+
 COPY elm-version elm-tooling.json ./
 RUN sh elm-version setup /usr/local/bin && elm-version download
+
 RUN ls -lahR ~/.elm/elm-tooling
+
 COPY . .
 RUN elm make elm/Main.elm
 # elm-format doesn’t work on alpine.

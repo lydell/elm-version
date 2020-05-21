@@ -1,6 +1,4 @@
-FROM debian
-
-RUN apt-get update && apt-get install -y curl
+FROM node
 
 WORKDIR /app
 
@@ -9,7 +7,8 @@ RUN sh elm-version setup /usr/local/bin && elm-version download
 
 RUN ls -lahR ~/.elm/elm-tooling
 
-COPY . .
-RUN elm make elm/Main.elm
-RUN elm-format --validate elm
+COPY package.json package-lock.json ./
+RUN npm ci
 
+COPY . .
+RUN npm run build
