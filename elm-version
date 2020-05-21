@@ -266,7 +266,7 @@ example() {
         stderr "Usage: elm-version example"
         exit 1
     fi
-    if test -t 1; then
+    if test -t 1 -o "$ELM_VERSION_FORCE_TTY" = "1"; then
         stdout "Here is an example elm-tooling.json, with the latest known binaries:"
         stdout ""
     fi
@@ -280,7 +280,7 @@ example() {
     done
     stdout "    }"
     stdout "}"
-    if test -t 1; then
+    if test -t 1 -o "$ELM_VERSION_FORCE_TTY" = "1"; then
         stdout ""
         stdout "To create a new project:"
         stdout ""

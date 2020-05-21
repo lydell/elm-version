@@ -2,11 +2,14 @@
   "private": true,
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "test": "prettier --check . && jest"
   },
   "devDependencies": {
     "elm-hot": "^1.1.4",
+    "jest": "^26.0.1",
     "node-elm-compiler": "^5.0.4",
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "prettier": "^2.0.5"
   }
 }
