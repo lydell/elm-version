@@ -2,6 +2,7 @@
 
 set -e
 
+version="1.0.0"
 supported_binaries="$(printf "elm\nelm-format")"
 default_elm_home="$HOME/.elm"
 binary_dir="elm-tooling"
@@ -218,6 +219,7 @@ help() {
         stdout "elm-version uninstall"
         stdout "  Prints instructions on how to uninstall elm-version and related files."
     else
+        stdout "elm-version $version"
         stdout "Download and run Elm tooling from elm-tooling.json."
         stdout ""
         stdout "elm-version download"
