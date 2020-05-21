@@ -4,14 +4,26 @@
 const { spawnSync } = require("child_process");
 const path = require("path");
 
-const ELM_VERSION = path.join(__dirname, "..", "elm-version");
+const BASE_DIR = path.join(__dirname, "..");
+const ELM_VERSION = path.join(BASE_DIR, "elm-version");
+
+function replaceBaseDir(string) {
+  while (string.includes(BASE_DIR)) {
+    string = string.replace(BASE_DIR, "/usr/local/bin");
+  }
+  return string;
+}
 
 function runWithEnv(env, ...args) {
   const { status, stdout, stderr } = spawnSync(ELM_VERSION, args, {
-    env,
+    env: { HOME: "/Users/you", ...env },
     encoding: "utf8",
   });
-  return { status, stdout, stderr };
+  return {
+    status,
+    stdout: replaceBaseDir(stdout),
+    stderr: replaceBaseDir(stderr),
+  };
 }
 
 function run(...args) {
@@ -364,10 +376,10 @@ describe("uninstall", () => {
         "stdout": "To uninstall, you need to remove the following:
       (All of them might not exist.)
 
-      /Users/lydell/src/elm-version/elm-version
-      /Users/lydell/src/elm-version/elm
-      /Users/lydell/src/elm-version/elm-format
-      /.elm/elm-tooling/
+      /usr/local/bin/elm-version
+      /usr/local/bin/elm
+      /usr/local/bin/elm-format
+      /Users/you/.elm/elm-tooling/
       $ELM_HOME/elm-tooling/ (for past values of ELM_HOME you might have used)
       ",
       }
@@ -383,10 +395,10 @@ describe("uninstall", () => {
         "stdout": "To uninstall, you need to remove the following:
       (All of them might not exist.)
 
-      /Users/lydell/src/elm-version/elm-version
-      /Users/lydell/src/elm-version/elm
-      /Users/lydell/src/elm-version/elm-format
-      /.elm/elm-tooling/
+      /usr/local/bin/elm-version
+      /usr/local/bin/elm
+      /usr/local/bin/elm-format
+      /Users/you/.elm/elm-tooling/
       /some/custom/elm/home/elm-tooling/
       $ELM_HOME/elm-tooling/ (for past values of ELM_HOME you might have used)
       ",
