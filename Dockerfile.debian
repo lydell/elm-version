@@ -1,8 +1,10 @@
 FROM debian
 RUN apt-get update && apt-get install -y curl
+WORKDIR /app
 COPY elm-version elm-tooling.json ./
 RUN sh elm-version setup /usr/local/bin && elm-version download
 RUN ls -lahR ~/.elm/elm-tooling
-RUN elm --version
-RUN elm-format --help
+COPY . .
+RUN elm make elm/Main.elm
+RUN elm-format --validate elm
 
