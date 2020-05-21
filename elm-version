@@ -146,13 +146,26 @@ get_closest_elm_tooling_json() {
     done
 }
 
+checksum() {
+    # Double space between hash and filename is important on Alpine.
+    input="$1  $2"
+    if command -v sha256sum > /dev/null; then
+        stdout "$input" | sha256sum -c
+    elif command -v shasum > /dev/null; then
+        stdout "$input" | shasum -a 256 -c
+    else
+        stderr "sha256sum or shasum is required, but none of them were found."
+        exit 1
+    fi
+}
+
 download_file() {
     if command -v curl > /dev/null; then
         curl -#fLo "$2" "$1"
     elif command -v wget > /dev/null; then
         wget -nv -O "$2" "$1"
     else
-        stderr "curl or wget is required, but none of them was found."
+        stderr "curl or wget is required, but none of them were found."
         exit 1
     fi
 }
@@ -181,8 +194,7 @@ download_binary() {
     mkdir -p "$dir"
     download_file "$url" "$tmp"
 
-    # Double space between hash and filename is important on Alpine.
-    if ! stdout "$hash  $tmp" | sha256sum -c; then
+    if ! checksum "$hash" "$tmp"; then
         stderr "Downloaded file is compromised! Aborting."
         rm "$tmp"
         exit 1

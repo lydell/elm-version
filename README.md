@@ -58,7 +58,7 @@ Want to use `elm-version` in CI and build systems? Then it’s recommended to co
 
 - It’s ugly and hard to read.
 - You might end up with accidentally using different versions of `elm-version` in CI vs your build scripts.
-- I’d recommend adding a sha256sum check to it (so you know that you get what you expected), which makes the oneliner even more complicated and error-prone.
+- I’d recommend adding a shasum check to it (so you know that you get what you expected), which makes the oneliner even more complicated and error-prone.
 
 By instead committing a copy of `elm-version`:
 
