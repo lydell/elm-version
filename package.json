@@ -3,9 +3,11 @@
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
-    "test": "prettier --check . && jest"
+    "test": "prettier --check . && jest",
+    "doctoc": "doctoc README.md"
   },
   "devDependencies": {
+    "doctoc": "1.4.0",
     "elm-hot": "1.1.4",
     "jest": "26.0.1",
     "node-elm-compiler": "5.0.4",

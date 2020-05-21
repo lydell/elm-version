@@ -4,6 +4,29 @@ Download and run Elm tooling from [elm-tooling.json].
 
 Status: Proof-of-concept. Hacky JSON parsing. But it works! No Windows support.
 
+<!-- prettier-ignore-start -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Example](#example)
+- [Installation](#installation)
+- [CI/Build installation](#cibuild-installation)
+  - [Docker](#docker)
+  - [GitHub Actions](#github-actions)
+- [Upgrading](#upgrading)
+- [Uninstallation](#uninstallation)
+- [Security](#security)
+- [Supported binaries](#supported-binaries)
+- [Creating elm-tooling.json](#creating-elm-toolingjson)
+  - [For a new project](#for-a-new-project)
+  - [For an existing project](#for-an-existing-project)
+- [Tips and tricks](#tips-and-tricks)
+- [Goals](#goals)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- prettier-ignore-end -->
+
 ## Example
 
 ```
