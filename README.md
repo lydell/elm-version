@@ -154,6 +154,7 @@ Notes:
 
 - Tools that need Node.js, such as elm-test, elm-live, elm-graphql, elm-review and elm-pages, are better installed with `npm`.
 - Tools that _are_ binaries but don’t need project specific versions, such as elm-json, are better installed globally using any method you prefer. However, maybe `elm-version` could help installing such binaries globally in the future?
+- Why not install `elm` and `elm-format` using `npm`? Because `npm` doesn’t really support platform-specific binaries, which means that the binaries aren’t cached and often re-downloaded unnecessarily when you run `npm install`. Also, you’ll get a copy of the binaries in each project, making them take around 30 MB more space than they’d need to.
 
 ## Creating elm-tooling.json
 
