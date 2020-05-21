@@ -147,9 +147,9 @@ get_closest_elm_tooling_json() {
 }
 
 download_file() {
-    if type curl > /dev/null; then
+    if command -v curl > /dev/null; then
         curl -#fLo "$2" "$1"
-    elif type wget > /dev/null; then
+    elif command -v wget > /dev/null; then
         wget -nv -O "$2" "$1"
     else
         stderr "curl or wget is required, but none of them was found."

@@ -10,4 +10,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run workflow
-        run: shellcheck elm-version
+        run: shellcheck elm-version *.sh
