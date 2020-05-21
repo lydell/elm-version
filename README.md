@@ -162,6 +162,16 @@ You can use `elm-version init` for existing projects as well, but you might need
 6. `sh -c 'cp "$(which elm-version)" elm-version'`
 7. Configure CI and build. For example, you need to run `sh elm-version setup /usr/local/bin && elm-version download` rather than `npm install` (see the [CI/Build installation](#cibuild-installation) section).
 
+## Tips and tricks
+
+- If you use for example Elm 0.19.0 very often, you could put a symlink to `~/.elm/elm-tooling/elm/0.19.0/elm` in your `$PATH`. For example:
+
+  ```sh
+  sh -c 'ln -s "${ELM_HOME:-$HOME/.elm}/elm-tooling/elm/0.19.0/elm" /usr/local/bin/elm0.19.0'
+  ```
+
+- If you want to check if you and someone else are running the same version of `elm-version`, you could both run `sh -c 'cksum "$(which elm-version)"'` and compare outputs.
+
 ## Goals
 
 The goal is to make it easy and fast to have project-specific versions of Elm and Elm tooling. It should be easy for developers, as well as for CI and build scripts.
