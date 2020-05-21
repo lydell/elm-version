@@ -69,7 +69,7 @@ By instead committing a copy of `elm-version`:
 
 Once you’ve installed `elm-version` on your computer, you could run the following to copy it to your project:
 
-```
+```sh
 cd your-project
 sh -c 'cp "$(which elm-version)" elm-version'
 ```
