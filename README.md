@@ -115,6 +115,21 @@ To update `elm` or `elm-format`, edit [elm-tooling.json] and run `elm-version do
 
 `elm-version` includes sha256 checksums for all binary versions it supports. If there’s a checksum mismatch on a downloaded file, `elm-version` removes the bad file and errors. Only known versions can be installed.
 
+## Supported binaries
+
+- elm
+  - 0.19.0
+  - 0.19.1
+- elm-format
+  - 0.8.1
+  - 0.8.2
+  - 0.8.3
+
+Notes:
+
+- Tools that need Node.js, such as elm-test, elm-live, elm-graphql, elm-review and elm-pages, are better installed with `npm`.
+- Tools that _are_ binaries but don’t need project specific versions, such as elm-json, are better installed globally using any method you prefer. However, maybe `elm-version` could help installing such binaries globally in the future?
+
 ## Goals
 
 The goal is to make it easy and fast to have project-specific versions of Elm and Elm tooling. It should be easy for developers, as well as for CI and build scripts.
