@@ -25,7 +25,7 @@ See `elm-version help` for all available commands, and `elm-version example` for
 Triple-click, copy and paste.
 
 ```sh
-sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com/lydell/elm-version/v1.0.0/elm-version"; if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi && chmod +x "$path" && elm-version setup "$(dirname "$path")"'
+sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com/lydell/elm-version/master/elm-version"; if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi && chmod +x "$path" && elm-version setup "$(dirname "$path")"'
 ```
 
 > Permission denied? Try adding `sudo` at the start: `sudo sh -c '...'`
