@@ -17,6 +17,6 @@ jobs:
 
       - name: Run workflow
         run: |
-          test -d node_modules || npm ci
           shellcheck elm-version *.sh
+          test -d node_modules || npm ci
           npm test

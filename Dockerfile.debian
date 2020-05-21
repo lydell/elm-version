@@ -12,4 +12,3 @@ RUN ls -lahR ~/.elm/elm-tooling
 COPY . .
 RUN elm make elm/Main.elm
 RUN elm-format --validate elm
-

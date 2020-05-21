@@ -45,10 +45,10 @@ sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com
 <details>
 <summary>Alternative installation instructions</summary>
 
-- Download the `elm-version` shell script from this repo.
-- Make it executable.
-- Put it in your `$PATH`.
-- Run `elm-version setup SOME_DIR_IN_PATH` to create wrappers for `elm` and `elm-format`.
+1. Download the `elm-version` shell script from this repo.
+2. Make it executable.
+3. Put it in your `$PATH`.
+4. Run `elm-version setup SOME_DIR_IN_PATH` to create wrappers for `elm` and `elm-format`.
 
 </details>
 
@@ -57,7 +57,7 @@ sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com
 Want to use `elm-version` in CI and build systems? Then it’s recommended to commit a copy of `elm-version` to your repo! You _could_ copy that one-liner above into your CI setup and build scripts, but:
 
 - It’s ugly and hard to read.
-- You might end up with accidentally using different versions of `elm-version` in CI vs your build scripts.
+- You might end up accidentally using different versions of `elm-version` in CI vs your build scripts.
 - I’d recommend adding a shasum check to it (so you know that you get what you expected), which makes the oneliner even more complicated and error-prone.
 
 By instead committing a copy of `elm-version`:
@@ -83,6 +83,8 @@ RUN elm-version setup /usr/local/bin && elm-version download
 
 Note: `curl` or `wget` is required – you might need to install one of them depending on what docker image you use.
 
+It’s recommended to put the above code early in your Dockerfile so you can take advantage of caching.
+
 ### GitHub Actions
 
 ```yaml
@@ -107,7 +109,11 @@ jobs:
 
 To update `elm-version` itself, re-run the installation instructions. It overwrites the previous installation.
 
-To update `elm` or `elm-format`, edit [elm-tooling.json]. Note: This might requiring updating `elm-version` as well. `elm-version` hardcodes the versions of binaries it supports. This shouldn’t be a problem since `elm` and `elm-format` releases aren’t frequent.
+To update `elm` or `elm-format`, edit [elm-tooling.json] and run `elm-version download`. Note: This might requiring updating `elm-version` as well. `elm-version` hardcodes the versions of binaries it supports (see the next section for why). This shouldn’t be a problem since `elm` and `elm-format` releases aren’t frequent.
+
+## Security
+
+`elm-version` includes sha256 checksums for all binary versions it supports. If there’s a checksum mismatch on a downloaded file, `elm-version` removes the bad file and errors. Only known versions can be installed.
 
 ## Goals
 

@@ -2,7 +2,7 @@
 
 set -e
 
-sql="
+all="
 elm	0.19.0
 elm	0.19.1
 elm-format	0.8.1
@@ -14,7 +14,7 @@ write_json() {
     printf '{"entrypoints":["elm/Main.elm"],"binaries":{"%s":"%s"}}' "$1" "$2" > elm-tooling.json
 }
 
-echo "$sql" | sed "/^$/d" | while read -r line; do
+echo "$all" | sed "/^$/d" | while read -r line; do
     name="$(echo "$line" | cut -f 1)"
     version="$(echo "$line" | cut -f 2)"
     write_json "$name" "$version"
