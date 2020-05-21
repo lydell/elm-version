@@ -18,8 +18,6 @@ Run `cd example-project && elm-version download` to get the versions of `elm` an
 
 There’s no magic – `elm-version` simply replaces your global `elm` and `elm-format` with wrappers that look up the directory tree for an [elm-tooling.json] and uses the versions specified there (or the latest version if no [elm-tooling.json] is found.) The _actual_ [binaries are stored in `~/.elm`][binaries].
 
-See `elm-version help` for all available commands, and `elm-version example` for how to set up a new project, or an existing project.
-
 ## Installation
 
 Triple-click, copy and paste.
@@ -65,7 +63,7 @@ By instead committing a copy of `elm-version`:
 - Your scripts become super clean: `sh elm-version ...`
 - You always know exactly what is being executed, and you get rid of one Internet request that can fail.
 - As a bonus, new contributors who don’t have `elm-version` installed can run `sh elm-version setup /usr/bin/local` to get it. They might not get the absolutely latest version, but they’ll at least get something that works with your project.
-- `elm-version` is a couple of hundred lines of shell script so it shouldn’t be too bad to commit. The alternative would be copying and commiting a 300-char oneliner (possibly more than once).
+- `elm-version` is a couple of hundred lines of shell script so it shouldn’t be too bad to commit. The alternative would be copying and committing a 300-char oneliner (possibly more than once).
 
 Once you’ve installed `elm-version` on your computer, you could run the following to copy it to your project:
 
@@ -111,6 +109,10 @@ To update `elm-version` itself, re-run the installation instructions. It overwri
 
 To update `elm` or `elm-format`, edit [elm-tooling.json] and run `elm-version download`. Note: This might requiring updating `elm-version` as well. `elm-version` hardcodes the versions of binaries it supports (see the next section for why). This shouldn’t be a problem since `elm` and `elm-format` releases aren’t frequent.
 
+## Uninstallation
+
+Run `elm-version uninstall` and follow the instructions. Basically, you need to remove a couple of files.
+
 ## Security
 
 `elm-version` includes sha256 checksums for all binary versions it supports. If there’s a checksum mismatch on a downloaded file, `elm-version` removes the bad file and errors. Only known versions can be installed.
@@ -129,6 +131,36 @@ Notes:
 
 - Tools that need Node.js, such as elm-test, elm-live, elm-graphql, elm-review and elm-pages, are better installed with `npm`.
 - Tools that _are_ binaries but don’t need project specific versions, such as elm-json, are better installed globally using any method you prefer. However, maybe `elm-version` could help installing such binaries globally in the future?
+
+## Creating elm-tooling.json
+
+### For a new project
+
+Run `elm-version init` to create an [elm-tooling.json] with the latest versions, that matches the `elm.json` created by running `elm init`.
+
+```sh
+mkdir my-project
+cd my-project
+elm-version init
+elm-version download
+elm init
+mkdir src
+touch src/Main.elm
+```
+
+Then start working on your project!
+
+### For an existing project
+
+You can use `elm-version init` for existing projects as well, but you might need to tweak [elm-tooling.json] a little.
+
+1. `cd my-project`
+2. `elm-version init`
+3. Edit [elm-tooling.json]. For example, if you previously installed `elm` and `elm-format` using `npm`, copy their versions from `package.json` to [elm-tooling.json]. Then you can remove them from `package.json`. You also need to edit `"entrypoints"` in [elm-tooling.json] to match your project.
+4. `elm-version download`
+5. Configure tools and editors. For example, tools should look for just `elm`, not `./node_modules/.bin/elm`.
+6. `sh -c 'cp "$(which elm-version)" elm-version'`
+7. Configure CI and build. For example, you need to run `sh elm-version setup /usr/local/bin && elm-version download` rather than `npm install` (see the [CI/Build installation](#cibuild-installation) section).
 
 ## Goals
 

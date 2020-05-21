@@ -25,7 +25,6 @@
 
 set -e
 
-version="1.0.0"
 supported_binaries="$(printf "elm\nelm-format")"
 default_elm_home="$HOME/.elm"
 binary_dir="elm-tooling"
@@ -257,15 +256,15 @@ help() {
         stdout "elm-version uninstall"
         stdout "  Prints instructions on how to uninstall elm-version and related files."
     else
-        stdout "elm-version $version"
         stdout "Download and run Elm tooling from elm-tooling.json."
         stdout ""
         stdout "elm-version download"
         stdout "  Downloads the binaries specified in the closest elm-tooling.json."
         stdout "  Downloads the latest versions if no elm-tooling.json is found."
         stdout ""
-        stdout "elm-version example"
-        stdout "  Prints an example elm-tooling.json to help you get started."
+        stdout "elm-version init"
+        stdout "  Creates an elm-tooling.json with the latest versions,"
+        stdout "  that matches the elm.json created by running 'elm init'."
         stdout ""
         stdout "elm-version help"
         stdout "  Prints this message."
@@ -282,56 +281,26 @@ help() {
     fi
 }
 
-example() {
+init() {
     if test "$#" -ne 0; then
         stderr "No extra arguments are supported."
-        stderr "Usage: elm-version example"
+        stderr "Usage: elm-version init"
         exit 1
     fi
-    if test -t 1 -o "$ELM_VERSION_FORCE_TTY" = "1"; then
-        stdout "Here is an example elm-tooling.json, with the latest known binaries:"
-        stdout ""
+    file="./elm-tooling.json"
+    if test -f elm-tooling.json; then
+        stderr "$file already exists!"
+        exit 1
     fi
-    stdout "{"
-    stdout '    "entrypoints": ["src/Main.elm"],'
-    stdout '    "binaries": {'
+    content='{|    "entrypoints": ["src/Main.elm"],|    "binaries": {|'
     last_binary="$(stdout "$supported_binaries" | tail -n 1)"
     for name in $supported_binaries; do
         comma="$(test "$name" = "$last_binary" && printf "" || printf ",")"
-        stdout '        "'"$name"'": "'"$(get_latest_version "$name")"'"'"$comma"
+        content="$content        \"$name\": \"$(get_latest_version "$name")\"$comma|"
     done
-    stdout "    }"
-    stdout "}"
-    if test -t 1 -o "$ELM_VERSION_FORCE_TTY" = "1"; then
-        stdout ""
-        stdout "To create a new project:"
-        stdout ""
-        stdout "  1. mkdir my-project"
-        stdout "  2. cd my-project"
-        stdout "  3. elm-version example > elm-tooling.json"
-        stdout "  4. elm-version download"
-        stdout "  5. elm init"
-        stdout "  6. mkdir src"
-        stdout "  7. touch src/Main.elm"
-        stdout "  8. Start working on your project!"
-        stdout ""
-        stdout "To add elm-tooling.json to an existing project:"
-        stdout ""
-        stdout "  1. cd my-project"
-        stdout "  2. elm-version example > elm-tooling.json"
-        stdout "  3. Edit elm-tooling.json"
-        stdout "     For example, if you previously installed elm and elm-format using npm,"
-        stdout "     copy their versions from package.json to elm-tooling.json. Then you can"
-        stdout "     remove them from package.json."
-        stdout '     You also need to edit "entrypoints" in elm-tooling.json to match your project.'
-        stdout "  4. elm-version download"
-        stdout "  5. Configure tools and editors"
-        stdout "     For example, tools should look for just 'elm', not './node_modules/.bin/elm'."
-        stdout "  6. cp \"$0\" elm-version"
-        stdout "  7. Configure CI and build"
-        stdout "     For example, you need to run 'sh elm-version setup && sh elm-version download'"
-        stdout "     rather than 'npm install'. More information: https://github.com/lydell/elm-version"
-    fi
+    content="$content    }|}"
+    stdout "$content" | tr "|" "\n" > "$file"
+    stdout "Created $file!"
 }
 
 setup() {
@@ -459,8 +428,8 @@ case "$command" in
     ""|"-h"|"-help"|"--help"|"help")
         help "$@"
         ;;
-    "example")
-        example "$@"
+    "init")
+        init "$@"
         ;;
     "setup")
         setup "$@"

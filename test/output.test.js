@@ -33,157 +33,157 @@ function run(...args) {
 describe("help", () => {
   test("prints help when no arguments given", () => {
     expect(run()).toMatchInlineSnapshot(`
-          Object {
-            "status": 0,
-            "stderr": "",
-            "stdout": "elm-version 1.0.0
-          Download and run Elm tooling from elm-tooling.json.
+      Object {
+        "status": 0,
+        "stderr": "",
+        "stdout": "Download and run Elm tooling from elm-tooling.json.
 
-          elm-version download
-            Downloads the binaries specified in the closest elm-tooling.json.
-            Downloads the latest versions if no elm-tooling.json is found.
+      elm-version download
+        Downloads the binaries specified in the closest elm-tooling.json.
+        Downloads the latest versions if no elm-tooling.json is found.
 
-          elm-version example
-            Prints an example elm-tooling.json to help you get started.
+      elm-version init
+        Creates an elm-tooling.json with the latest versions,
+        that matches the elm.json created by running 'elm init'.
 
-          elm-version help
-            Prints this message.
+      elm-version help
+        Prints this message.
 
-          elm-version help more
-            Prints help about commands not used very often.
+      elm-version help more
+        Prints help about commands not used very often.
 
-          elm ...
-          elm-format ...
-            Runs the version of a binary specified in elm-tooling.json.
-            Runs the latest version if no elm-tooling.json is found.
-            For more information: elm-version help more
-          ",
-          }
-      `);
+      elm ...
+      elm-format ...
+        Runs the version of a binary specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+        For more information: elm-version help more
+      ",
+      }
+    `);
   });
 
   test("-h", () => {
     expect(run("-h")).toMatchInlineSnapshot(`
-          Object {
-            "status": 0,
-            "stderr": "",
-            "stdout": "elm-version 1.0.0
-          Download and run Elm tooling from elm-tooling.json.
+      Object {
+        "status": 0,
+        "stderr": "",
+        "stdout": "Download and run Elm tooling from elm-tooling.json.
 
-          elm-version download
-            Downloads the binaries specified in the closest elm-tooling.json.
-            Downloads the latest versions if no elm-tooling.json is found.
+      elm-version download
+        Downloads the binaries specified in the closest elm-tooling.json.
+        Downloads the latest versions if no elm-tooling.json is found.
 
-          elm-version example
-            Prints an example elm-tooling.json to help you get started.
+      elm-version init
+        Creates an elm-tooling.json with the latest versions,
+        that matches the elm.json created by running 'elm init'.
 
-          elm-version help
-            Prints this message.
+      elm-version help
+        Prints this message.
 
-          elm-version help more
-            Prints help about commands not used very often.
+      elm-version help more
+        Prints help about commands not used very often.
 
-          elm ...
-          elm-format ...
-            Runs the version of a binary specified in elm-tooling.json.
-            Runs the latest version if no elm-tooling.json is found.
-            For more information: elm-version help more
-          ",
-          }
-      `);
+      elm ...
+      elm-format ...
+        Runs the version of a binary specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+        For more information: elm-version help more
+      ",
+      }
+    `);
   });
 
   test("--help", () => {
     expect(run("--help")).toMatchInlineSnapshot(`
-          Object {
-            "status": 0,
-            "stderr": "",
-            "stdout": "elm-version 1.0.0
-          Download and run Elm tooling from elm-tooling.json.
+      Object {
+        "status": 0,
+        "stderr": "",
+        "stdout": "Download and run Elm tooling from elm-tooling.json.
 
-          elm-version download
-            Downloads the binaries specified in the closest elm-tooling.json.
-            Downloads the latest versions if no elm-tooling.json is found.
+      elm-version download
+        Downloads the binaries specified in the closest elm-tooling.json.
+        Downloads the latest versions if no elm-tooling.json is found.
 
-          elm-version example
-            Prints an example elm-tooling.json to help you get started.
+      elm-version init
+        Creates an elm-tooling.json with the latest versions,
+        that matches the elm.json created by running 'elm init'.
 
-          elm-version help
-            Prints this message.
+      elm-version help
+        Prints this message.
 
-          elm-version help more
-            Prints help about commands not used very often.
+      elm-version help more
+        Prints help about commands not used very often.
 
-          elm ...
-          elm-format ...
-            Runs the version of a binary specified in elm-tooling.json.
-            Runs the latest version if no elm-tooling.json is found.
-            For more information: elm-version help more
-          ",
-          }
-      `);
+      elm ...
+      elm-format ...
+        Runs the version of a binary specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+        For more information: elm-version help more
+      ",
+      }
+    `);
   });
 
   test("help", () => {
     expect(run("help")).toMatchInlineSnapshot(`
-          Object {
-            "status": 0,
-            "stderr": "",
-            "stdout": "elm-version 1.0.0
-          Download and run Elm tooling from elm-tooling.json.
+      Object {
+        "status": 0,
+        "stderr": "",
+        "stdout": "Download and run Elm tooling from elm-tooling.json.
 
-          elm-version download
-            Downloads the binaries specified in the closest elm-tooling.json.
-            Downloads the latest versions if no elm-tooling.json is found.
+      elm-version download
+        Downloads the binaries specified in the closest elm-tooling.json.
+        Downloads the latest versions if no elm-tooling.json is found.
 
-          elm-version example
-            Prints an example elm-tooling.json to help you get started.
+      elm-version init
+        Creates an elm-tooling.json with the latest versions,
+        that matches the elm.json created by running 'elm init'.
 
-          elm-version help
-            Prints this message.
+      elm-version help
+        Prints this message.
 
-          elm-version help more
-            Prints help about commands not used very often.
+      elm-version help more
+        Prints help about commands not used very often.
 
-          elm ...
-          elm-format ...
-            Runs the version of a binary specified in elm-tooling.json.
-            Runs the latest version if no elm-tooling.json is found.
-            For more information: elm-version help more
-          ",
-          }
-      `);
+      elm ...
+      elm-format ...
+        Runs the version of a binary specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+        For more information: elm-version help more
+      ",
+      }
+    `);
   });
 
   test("ignores extra arguments", () => {
     expect(run("help", "extra", "arg")).toMatchInlineSnapshot(`
-          Object {
-            "status": 0,
-            "stderr": "",
-            "stdout": "elm-version 1.0.0
-          Download and run Elm tooling from elm-tooling.json.
+      Object {
+        "status": 0,
+        "stderr": "",
+        "stdout": "Download and run Elm tooling from elm-tooling.json.
 
-          elm-version download
-            Downloads the binaries specified in the closest elm-tooling.json.
-            Downloads the latest versions if no elm-tooling.json is found.
+      elm-version download
+        Downloads the binaries specified in the closest elm-tooling.json.
+        Downloads the latest versions if no elm-tooling.json is found.
 
-          elm-version example
-            Prints an example elm-tooling.json to help you get started.
+      elm-version init
+        Creates an elm-tooling.json with the latest versions,
+        that matches the elm.json created by running 'elm init'.
 
-          elm-version help
-            Prints this message.
+      elm-version help
+        Prints this message.
 
-          elm-version help more
-            Prints help about commands not used very often.
+      elm-version help more
+        Prints help about commands not used very often.
 
-          elm ...
-          elm-format ...
-            Runs the version of a binary specified in elm-tooling.json.
-            Runs the latest version if no elm-tooling.json is found.
-            For more information: elm-version help more
-          ",
-          }
-      `);
+      elm ...
+      elm-format ...
+        Runs the version of a binary specified in elm-tooling.json.
+        Runs the latest version if no elm-tooling.json is found.
+        For more information: elm-version help more
+      ",
+      }
+    `);
   });
 
   test("help more", () => {
@@ -210,78 +210,24 @@ describe("help", () => {
   });
 });
 
-describe("example", () => {
-  test("prints example and instructions", () => {
-    expect(runWithEnv({ ELM_VERSION_FORCE_TTY: "1" }, "example"))
-      .toMatchInlineSnapshot(`
+describe("init", () => {
+  test("elm-tooling.json already exists", () => {
+    expect(run("init")).toMatchInlineSnapshot(`
       Object {
-        "status": 0,
-        "stderr": "",
-        "stdout": "Here is an example elm-tooling.json, with the latest known binaries:
-
-      {
-          \\"entrypoints\\": [\\"src/Main.elm\\"],
-          \\"binaries\\": {
-              \\"elm\\": \\"0.19.1\\",
-              \\"elm-format\\": \\"0.8.3\\"
-          }
-      }
-
-      To create a new project:
-
-        1. mkdir my-project
-        2. cd my-project
-        3. elm-version example > elm-tooling.json
-        4. elm-version download
-        5. elm init
-        6. mkdir src
-        7. touch src/Main.elm
-        8. Start working on your project!
-
-      To add elm-tooling.json to an existing project:
-
-        1. cd my-project
-        2. elm-version example > elm-tooling.json
-        3. Edit elm-tooling.json
-           For example, if you previously installed elm and elm-format using npm,
-           copy their versions from package.json to elm-tooling.json. Then you can
-           remove them from package.json.
-           You also need to edit \\"entrypoints\\" in elm-tooling.json to match your project.
-        4. elm-version download
-        5. Configure tools and editors
-           For example, tools should look for just 'elm', not './node_modules/.bin/elm'.
-        6. cp \\"/usr/local/bin/elm-version\\" elm-version
-        7. Configure CI and build
-           For example, you need to run 'sh elm-version setup && sh elm-version download'
-           rather than 'npm install'. More information: https://github.com/lydell/elm-version
+        "status": 1,
+        "stderr": "./elm-tooling.json already exists!
       ",
-      }
-    `);
-  });
-
-  test("prints only example if piped", () => {
-    expect(run("example")).toMatchInlineSnapshot(`
-      Object {
-        "status": 0,
-        "stderr": "",
-        "stdout": "{
-          \\"entrypoints\\": [\\"src/Main.elm\\"],
-          \\"binaries\\": {
-              \\"elm\\": \\"0.19.1\\",
-              \\"elm-format\\": \\"0.8.3\\"
-          }
-      }
-      ",
+        "stdout": "",
       }
     `);
   });
 
   test("extra arguments", () => {
-    expect(run("example", "extra")).toMatchInlineSnapshot(`
+    expect(run("init", "extra")).toMatchInlineSnapshot(`
       Object {
         "status": 1,
         "stderr": "No extra arguments are supported.
-      Usage: elm-version example
+      Usage: elm-version init
       ",
         "stdout": "",
       }

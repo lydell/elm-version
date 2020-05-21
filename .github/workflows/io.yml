@@ -23,5 +23,7 @@ jobs:
           rm elm-tooling.json
           elm-version download
           env ELM_HOME=/tmp elm-version download
+          elm-version init
+          elm-version download
 
           sh test-all-downloads.sh
