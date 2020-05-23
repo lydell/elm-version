@@ -237,6 +237,32 @@ download_binary() {
     esac
 }
 
+print_with_symlink() {
+    file="$1"
+    symlink="$(readlink "$file" || true)"
+    if test "$symlink" != ""; then
+        stdout "$file (symlink to $symlink)"
+    else
+        stdout "$file"
+    fi
+}
+
+uninstall_file() {
+    file="$1"
+    if test -f "$file"; then
+        print_with_symlink "$file"
+    else
+        stdout "$file (missing – have you moved files or already removed it?)"
+    fi
+}
+
+uninstall_dir() {
+    dir="$1"
+    if test -d "$dir"; then
+        print_with_symlink "$dir"
+    fi
+}
+
 ### COMMANDS
 
 help() {
@@ -393,16 +419,15 @@ uninstall() {
     fi
 
     stdout "To uninstall, you need to remove the following:"
-    stdout "(All of them might not exist.)"
     stdout ""
-    stdout "$0"
+    uninstall_file "$0"
     for name in $supported_binaries; do
-        stdout "$(dirname "$0")/$name"
+        uninstall_file "$(dirname "$0")/$name"
     done
-    stdout "$default_elm_home/$binary_dir/"
+    uninstall_dir "$default_elm_home/$binary_dir/"
     dir="${ELM_HOME:-$default_elm_home}"
     if test "$dir" != "$default_elm_home"; then
-        stdout "$dir/$binary_dir/"
+        uninstall_dir "$dir/$binary_dir/"
     fi
     stdout "\$ELM_HOME/$binary_dir/ (for past values of ELM_HOME you might have used)"
 }

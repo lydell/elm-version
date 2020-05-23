@@ -25,5 +25,7 @@ jobs:
           env ELM_HOME=/tmp elm-version download
           elm-version init
           elm-version download
+          elm-version uninstall
+          env ELM_HOME=/tmp elm-version uninstall
 
           sh test-all-downloads.sh

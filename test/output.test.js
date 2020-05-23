@@ -316,44 +316,6 @@ describe("run", () => {
 });
 
 describe("uninstall", () => {
-  test("prints uninstall instructions", () => {
-    expect(run("uninstall")).toMatchInlineSnapshot(`
-      Object {
-        "status": 0,
-        "stderr": "",
-        "stdout": "To uninstall, you need to remove the following:
-      (All of them might not exist.)
-
-      /usr/local/bin/elm-version
-      /usr/local/bin/elm
-      /usr/local/bin/elm-format
-      /Users/you/.elm/elm-tooling/
-      $ELM_HOME/elm-tooling/ (for past values of ELM_HOME you might have used)
-      ",
-      }
-    `);
-  });
-
-  test("prints custom ELM_HOME", () => {
-    expect(runWithEnv({ ELM_HOME: "/some/custom/elm/home" }, "uninstall"))
-      .toMatchInlineSnapshot(`
-      Object {
-        "status": 0,
-        "stderr": "",
-        "stdout": "To uninstall, you need to remove the following:
-      (All of them might not exist.)
-
-      /usr/local/bin/elm-version
-      /usr/local/bin/elm
-      /usr/local/bin/elm-format
-      /Users/you/.elm/elm-tooling/
-      /some/custom/elm/home/elm-tooling/
-      $ELM_HOME/elm-tooling/ (for past values of ELM_HOME you might have used)
-      ",
-      }
-    `);
-  });
-
   test("extra arguments", () => {
     expect(run("uninstall", "extra")).toMatchInlineSnapshot(`
       Object {
