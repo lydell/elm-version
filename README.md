@@ -4,6 +4,8 @@ Download and run Elm tooling from [elm-tooling.json].
 
 Status: Proof-of-concept. Hacky JSON parsing. But it works! No Windows support.
 
+[elm-tooling.json]: https://github.com/lydell/elm-tooling.json
+
 <!-- prettier-ignore-start -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -51,6 +53,12 @@ sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com
 
 > Permission denied? Try adding `sudo` at the start: `sudo sh -c '...'`
 
+You can also install using `npm` if you prefer:
+
+```sh
+sh -c 'npm install --global elm-version && elm-version setup "$(dirname "$(which elm-version)")"'
+```
+
 <details>
 <summary>Explanation</summary>
 
@@ -60,6 +68,17 @@ sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com
 - `if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi`: Download `elm-version` from `url` to `path` using `curl` if available and `wget` otherwise.
 - `chmod +x "$path"`: Make the downloaded `elm-version` executable.
 - `elm-version setup "$(dirname "$path")"`: Create wrappers for `elm` and `elm-format`, in the same directory as `elm-version`.
+
+npm:
+
+- `npm install --global elm-version`: Install `elm-version` globally using `npm`.
+- `elm-version setup "$(dirname "$(which elm-version)")"`: Create wrappers for `elm` and `elm-format`, in the same directory as `elm-version`.
+
+You could also run something like this:
+
+```sh
+npm install --global elm-version && elm-version setup /usr/local/bin
+```
 
 </details>
 
@@ -75,7 +94,23 @@ sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com
 
 ## CI/Build installation
 
-Want to use `elm-version` in CI and build systems? Then it’s recommended to commit a copy of `elm-version` to your repo! You _could_ copy that one-liner above into your CI setup and build scripts, but:
+Want to use `elm-version` in CI and build systems? There are two ways to do it:
+
+<details>
+<summary>Install <code>elm-version</code> using <code>npm</code> (if you need <code>npm</code> anyway)</summary>
+
+```sh
+npm install --save-dev elm-version
+```
+
+To upgrade, edit the version number for `"elm-version"` in `package.json`.
+
+</details>
+
+<details>
+<summary>Commit a copy of <code>elm-version</code> to your repo</summary>
+
+You _could_ copy that one-liner above into your CI setup and build scripts, but:
 
 - It’s ugly and hard to read.
 - You might end up accidentally using different versions of `elm-version` in CI vs your build scripts.
@@ -95,18 +130,56 @@ cd your-project
 sh -c 'cp "$(which elm-version)" elm-version'
 ```
 
+</details>
+
 ### Docker
 
+<details>
+<summary>Via npm</summary>
+
 ```Dockerfile
+# Install npm packages in a separate image, for maximum Docker caching.
+# Otherwise you’d lose the cached downloads of Elm binaries every time
+# package.json changes (which is much more frequent).
+FROM node:12 AS npm
+WORKDIR app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Start a new image.
+FROM node:12
+WORKDIR app
+
+# Copy elm-version from the previous image, then setup and install.
+COPY --from=npm /app/node_modules/elm-version/elm-version elm-version
+COPY elm-tooling.json ./
+RUN sh elm-version setup /usr/local/bin && elm-version download
+
+# Copy the full node_modules folder for the rest of your build.
+COPY --from=npm /app/node_modules node_modules
+
+# Then do whatever you need to.
+```
+
+</details>
+
+<details>
+<summary>Committed copy</summary>
+
+```Dockerfile
+# Put this early in your Dockerfile, to take advantage of Docker caching.
 COPY elm-version elm-tooling.json ./
 RUN sh elm-version setup /usr/local/bin && elm-version download
 ```
 
-Note: `curl` or `wget` is required – you might need to install one of them depending on what docker image you use.
+</details>
 
-It’s recommended to put the above code early in your Dockerfile so you can take advantage of caching.
+Note: `curl` or `wget` is required – you might need to install one of them depending on what Docker image you use.
 
 ### GitHub Actions
+
+<details>
+<summary>Via npm</summary>
 
 ```yaml
 jobs:
@@ -114,11 +187,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node_modules-${{ hashFiles('package-lock.json') }}
+
       - name: Cache elm packages and binaries
         uses: actions/cache@v1
         with:
           path: ~/.elm
           key: elm-${{ hashFiles('elm*.json') }}
+
+      - name: Run workflow
+        run: |
+          test -d node_modules || npm ci
+          sudo npx elm-version setup /usr/local/bin
+          elm-version download
+          npm run build # Or whatever you do in your build
+```
+
+</details>
+
+<details>
+<summary>Committed copy</summary>
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache elm packages and binaries
+        uses: actions/cache@v1
+        with:
+          path: ~/.elm
+          key: elm-${{ hashFiles('elm*.json') }}
+
       - name: Run workflow
         run: |
           sudo sh elm-version setup /usr/local/bin
@@ -126,15 +238,19 @@ jobs:
           elm make src/Main.elm # Or whatever you do in your build
 ```
 
+</details>
+
 ## Upgrading
 
-To update `elm-version` itself, re-run the installation instructions. It overwrites the previous installation.
+To upgrade `elm-version` itself, re-run the installation instructions. It overwrites the previous installation.
 
-To update `elm` or `elm-format`, edit [elm-tooling.json] and run `elm-version download`. Note: This might requiring updating `elm-version` as well. `elm-version` hardcodes the versions of binaries it supports (see the next section for why). This shouldn’t be a problem since `elm` and `elm-format` releases aren’t frequent.
+To upgrade `elm` or `elm-format`, edit [elm-tooling.json] and run `elm-version download`. Note: This might requiring updating `elm-version` as well. `elm-version` hardcodes the versions of binaries it supports (see the next section for why). This shouldn’t be a problem since `elm` and `elm-format` releases aren’t frequent.
 
 ## Uninstallation
 
 Run `elm-version uninstall` and follow the instructions. Basically, you need to remove a couple of files.
+
+If you installed using `npm` you need to run either `npm uninstall elm-version` or `npm uninstall --global elm-version` afterwards.
 
 ## Security
 
@@ -203,4 +319,3 @@ The goal is to make it easy and fast to have project-specific versions of Elm an
 The dream is that editors will start to support [elm-tooling.json] so they don’t even need to rely on `elm-version`’s wrappers of `elm` and `elm-format`. That would mean 0 overhead – editors could just execute binaries directly.
 
 [binaries]: https://github.com/lydell/elm-tooling.json#binaries
-[elm-tooling.json]: https://github.com/lydell/elm-tooling.json

@@ -1,0 +1,16 @@
+{
+  "name": "elm-version",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Simon Lydell",
+  "repository": "lydell/elm-version",
+  "description": "Download and run Elm tooling from elm-tooling.json.",
+  "keywords": [
+    "elm",
+    "elm-format",
+    "elm-tooling",
+    "elm-tooling.json",
+    "version manager"
+  ],
+  "bin": "elm-version"
+}

@@ -2,8 +2,9 @@
   "private": true,
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build index.html",
-    "test": "prettier --check . && jest",
+    "parcel": "parcel build index.html",
+    "build": "node build.js",
+    "test": "prettier --check . && npm run build && jest",
     "doctoc": "doctoc README.md"
   },
   "devDependencies": {
