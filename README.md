@@ -270,7 +270,9 @@ Notes:
 
 - Tools that need Node.js, such as elm-test, elm-live, elm-graphql, elm-review and elm-pages, are better installed with `npm`.
 - Tools that _are_ binaries but don’t need project specific versions, such as elm-json, are better installed globally using any method you prefer. However, maybe `elm-version` could help installing such binaries globally in the future?
-- Why not install `elm` and `elm-format` using `npm`? Because `npm` doesn’t really support platform-specific binaries, which means that the binaries aren’t cached and often re-downloaded unnecessarily when you run `npm install`. Also, you’ll get a copy of the binaries in each project, making them take around 30 MB more space than they’d need to.
+- Why not install `elm` and `elm-format` using `npm`? Because `npm` doesn’t really support platform-specific binaries, which means that the binaries aren’t cached and often re-downloaded unnecessarily when you run `npm install`. Also, you’ll get a copy of the binaries in each project, making them take around 45 MB\* more space than they’d need to.
+
+(\*) After running `npm install elm elm-format` in a new folder on macOS, `node_modules` is 45 MB. That’s including the size of the binaries as well as all 70 dependencies the `elm` and `elm-format` npm packages use to get the binaries to your computer.
 
 ## Creating elm-tooling.json
 
