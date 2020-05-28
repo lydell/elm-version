@@ -386,7 +386,11 @@ run() {
     latest_version="$(get_latest_version "$name")"
     elm_tooling_json="$(get_closest_elm_tooling_json)"
     if test "$elm_tooling_json" = ""; then
-        stderr "No elm-tooling.json found. Using the latest $name version: $latest_version"
+        # Only print this message if run in a terminal, and not when run for
+        # example by elm-test or elm-review.
+        if test -t 1; then
+            stderr "No elm-tooling.json found. Using the latest $name version: $latest_version"
+        fi
         version="$latest_version"
     else
         # Lame JSON “parser.”
