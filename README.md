@@ -64,7 +64,7 @@ sh -c 'npm install --global elm-version && elm-version setup "$(dirname "$(which
 
 - `sh -c '...'`: Execute `...` in the `sh` shell. Why? Copy-paste compatibility with most shells and it’s easy to add `sudo` if needed.
 - `path="/usr/local/bin/elm-version"`: Set the variable `path` to where to install `elm-version`.
-- `url="https://raw.githubusercontent.com/lydell/elm-version/v1.0.0/elm-version"`: Set the variable `url` to where to download `elm-version` from. Visit this URL first if you want to see what the code looks like before running it.
+- `url="https://raw.githubusercontent.com/lydell/elm-version/master/elm-version"`: Set the variable `url` to where to download `elm-version` from. Visit this URL first if you want to see what the code looks like before running it.
 - `if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi`: Download `elm-version` from `url` to `path` using `curl` if available and `wget` otherwise.
 - `chmod +x "$path"`: Make the downloaded `elm-version` executable.
 - `elm-version setup "$(dirname "$path")"`: Create wrappers for `elm` and `elm-format`, in the same directory as `elm-version`.
