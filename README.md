@@ -45,10 +45,28 @@ There’s no magic – `elm-version` simply replaces your global `elm` and `elm-
 
 ## Installation
 
-Triple-click, copy and paste.
+Copy and paste into your terminal:
 
 ```sh
-sh -c 'path="/usr/local/bin/elm-version"; url="https://raw.githubusercontent.com/lydell/elm-version/master/elm-version"; if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi && chmod +x "$path" && elm-version setup "$(dirname "$path")"'
+sh -c '
+# Exit on errors:
+set -e
+
+# Where to install elm-version:
+path="/usr/local/bin/elm-version"
+
+# Where to download elm-version from:
+url="https://raw.githubusercontent.com/lydell/elm-version/master/elm-version"
+
+# Download elm-version using curl if available, and wget otherwise.
+if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi
+
+# Make elm-version executable:
+chmod +x "$path"
+
+# Create wrappers for elm and elm-format, next to elm-version:
+elm-version setup "$(dirname "$path")"
+'
 ```
 
 > Permission denied? Try adding `sudo` at the start: `sudo sh -c '...'`
@@ -58,29 +76,6 @@ You can also install using `npm` if you prefer:
 ```sh
 sh -c 'npm install --global elm-version && elm-version setup "$(dirname "$(which elm-version)")"'
 ```
-
-<details>
-<summary>Explanation</summary>
-
-- `sh -c '...'`: Execute `...` in the `sh` shell. Why? Copy-paste compatibility with most shells and it’s easy to add `sudo` if needed.
-- `path="/usr/local/bin/elm-version"`: Set the variable `path` to where to install `elm-version`.
-- `url="https://raw.githubusercontent.com/lydell/elm-version/master/elm-version"`: Set the variable `url` to where to download `elm-version` from. Visit this URL first if you want to see what the code looks like before running it.
-- `if command -v curl > /dev/null; then curl -#fLo "$path" "$url"; else wget -nv -O "$path" "$url"; fi`: Download `elm-version` from `url` to `path` using `curl` if available and `wget` otherwise.
-- `chmod +x "$path"`: Make the downloaded `elm-version` executable.
-- `elm-version setup "$(dirname "$path")"`: Create wrappers for `elm` and `elm-format`, in the same directory as `elm-version`.
-
-npm:
-
-- `npm install --global elm-version`: Install `elm-version` globally using `npm`.
-- `elm-version setup "$(dirname "$(which elm-version)")"`: Create wrappers for `elm` and `elm-format`, in the same directory as `elm-version`.
-
-You could also run something like this:
-
-```sh
-npm install --global elm-version && elm-version setup /usr/local/bin
-```
-
-</details>
 
 <details>
 <summary>Alternative installation instructions</summary>
@@ -110,18 +105,17 @@ To upgrade, edit the version number for `"elm-version"` in `package.json`.
 <details>
 <summary>Commit a copy of <code>elm-version</code> to your repo</summary>
 
-You _could_ copy that one-liner above into your CI setup and build scripts, but:
+You _could_ copy installation command into your CI setup and build scripts, but:
 
-- It’s ugly and hard to read.
 - You might end up accidentally using different versions of `elm-version` in CI vs your build scripts.
-- I’d recommend adding a shasum check to it (so you know that you get what you expected), which makes the oneliner even more complicated and error-prone.
+- I’d recommend adding a shasum check to it (so you know that you get what you expected), which makes the installation command even more complicated and error-prone.
 
 By instead committing a copy of `elm-version`:
 
 - Your scripts become super clean: `sh elm-version ...`
 - You always know exactly what is being executed, and you get rid of one Internet request that can fail.
 - As a bonus, new contributors who don’t have `elm-version` installed can run `sh elm-version setup /usr/bin/local` to get it. They might not get the absolutely latest version, but they’ll at least get something that works with your project.
-- `elm-version` is a couple of hundred lines of shell script so it shouldn’t be too bad to commit. The alternative would be copying and committing a 300-char oneliner (possibly more than once).
+- `elm-version` is a couple of hundred lines of shell script so it shouldn’t be too bad to commit.
 
 Once you’ve installed `elm-version` on your computer, you could run the following to copy it to your project:
 
