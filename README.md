@@ -1,8 +1,12 @@
+# Deprecated
+
+Use [elm-tooling](https://github.com/lydell/elm-tooling.json/tree/master/cli) instead.
+
 # elm-version
 
 Download and run Elm tooling from [elm-tooling.json].
 
-Status: Proof-of-concept. Hacky JSON parsing. But it works! No Windows support.
+Proof-of-concept. Hacky JSON parsing. But it works! No Windows support.
 
 [elm-tooling.json]: https://github.com/lydell/elm-tooling.json
 
